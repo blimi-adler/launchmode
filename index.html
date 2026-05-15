@@ -573,6 +573,25 @@
 </head>
 <body>
 
+<!-- PASSWORD GATE -->
+<div id="password-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--near-black);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+  <div style="text-align:center;margin-bottom:8px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:white;letter-spacing:3px;">LAUNCH<span style="color:var(--red);">MODE</span></div>
+    <div style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:4px;">PivotYes · Business Course</div>
+  </div>
+  <div style="width:320px;">
+    <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:8px;">Enter Access Code</div>
+    <input id="pw-input" type="password" placeholder="Enter your code..." onkeydown="if(event.key==='Enter')checkPassword()"
+      style="width:100%;font-family:'DM Sans',sans-serif;font-size:14px;padding:14px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:3px;background:rgba(255,255,255,0.05);color:white;outline:none;margin-bottom:10px;">
+    <button onclick="checkPassword()"
+      style="width:100%;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--red);color:white;border:none;padding:14px;border-radius:3px;cursor:pointer;">
+      Access Workbook
+    </button>
+    <div id="pw-error" style="color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none;">Incorrect code. Please try again.</div>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:8px;">© PivotYes · Blimi Adler</div>
+</div>
+
 <!-- COVER -->
 <div class="cover" id="cover">
   <div class="cover-eyebrow">PivotYes · Business Course</div>
@@ -1676,6 +1695,19 @@
 
   function toggleCheck(el) {
     el.classList.toggle('checked');
+  }
+
+  function checkPassword() {
+    const input = document.getElementById('pw-input').value;
+    const error = document.getElementById('pw-error');
+    if (input === 'launch143') {
+      document.getElementById('password-gate').style.display = 'none';
+      error.style.display = 'none';
+    } else {
+      error.style.display = 'block';
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+    }
   }
 
   function printAll() {
