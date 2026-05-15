@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Mode Workbook | PivotYes</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E3000F;
+    --near-black: #1A1A1A;
+    --mid-gray: #4A4A4A;
+    --light-gray: #F5F5F5;
+    --border: #D8D8D8;
+    --white: #FFFFFF;
+    --field-bg: #FAFAFA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--near-black);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--near-black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 100px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 2px solid rgba(227,0,15,0.15);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -120px; right: 60px;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    border: 1px solid rgba(227,0,15,0.08);
+  }
+  .cover-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    line-height: 0.9;
+    color: var(--white);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .cover h1 span { color: var(--red); }
+  .cover-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 60px;
+    max-width: 520px;
+  }
+  .cover-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--red);
+    margin-bottom: 40px;
+  }
+  .cover-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+  }
+  .cover-meta strong { color: rgba(255,255,255,0.6); }
+  .cover-logo {
+    position: absolute;
+    bottom: 60px;
+    right: 80px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.15);
+  }
+  .cover-logo span { color: var(--red); }
+
+  /* ── NAVIGATION / MODULE TABS ── */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--near-black);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 3px solid var(--red);
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    border: none;
+    background: none;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+  }
+  .nav-btn:hover { color: rgba(255,255,255,0.8); }
+  .nav-btn.active { color: var(--white); border-bottom-color: var(--red); }
+
+  /* ── WRAPPER ── */
+  .wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* ── MODULE SECTIONS ── */
+  .module-section {
+    display: none;
+    padding-top: 52px;
+  }
+  .module-section.active { display: block; }
+
+  /* ── MODULE HEADER ── */
+  .module-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .module-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 1;
+    color: var(--light-gray);
+    letter-spacing: 2px;
+    flex-shrink: 0;
+  }
+  .module-title-block {}
+  .module-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+  .module-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 1px;
+    color: var(--near-black);
+    line-height: 1;
+  }
+  .module-desc {
+    font-size: 13px;
+    color: var(--mid-gray);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ── SECTIONS WITHIN MODULE ── */
+  .section-block {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--near-black);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── FORMULA CARD ── */
+  .formula-card {
+    background: var(--near-black);
+    color: var(--white);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .formula-card strong { color: var(--red); }
+  .formula-card em { color: rgba(255,255,255,0.5); font-style: normal; font-size: 11px; }
+
+  /* ── INPUT FIELDS ── */
+  input[type="text"], textarea, select {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--near-black);
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 14px;
+    transition: border-color 0.2s, background 0.2s;
+    resize: vertical;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--red);
+    background: var(--white);
+  }
+  textarea { min-height: 80px; }
+  textarea.tall { min-height: 130px; }
+  textarea.short { min-height: 56px; }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--mid-gray);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+  .field-group { margin-bottom: 14px; }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+
+  /* ── TABLE / ROW BUILDER ── */
+  .row-table { width: 100%; border-collapse: collapse; }
+  .row-table th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+  }
+  .row-table td {
+    border: 1px solid var(--border);
+    padding: 4px;
+    vertical-align: top;
+  }
+  .row-table td input[type="text"],
+  .row-table td textarea,
+  .row-table td select {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    padding: 8px 10px;
+  }
+  .row-table td input[type="text"]:focus,
+  .row-table td textarea:focus,
+  .row-table td select:focus {
+    background: #fff8f8;
+    outline: none;
+  }
+  .row-table td textarea { min-height: 44px; resize: none; }
+  .row-table tr:hover td { background: #fffafa; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: 13px;
+    color: var(--mid-gray);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .checklist li:hover { background: var(--light-gray); }
+  .checklist li.checked { color: var(--near-black); }
+  .checklist li.checked .check-box { background: var(--red); border-color: var(--red); }
+  .checklist li.checked .check-box::after { opacity: 1; }
+  .check-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .check-box::after {
+    content: '✓';
+    position: absolute;
+    top: -1px; left: 2px;
+    font-size: 12px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  /* ── OBJECTION CARDS ── */
+  .objection-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .objection-header {
+    background: var(--light-gray);
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .objection-header span.tag {
+    background: var(--red);
+    color: white;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+  .objection-body { padding: 12px; }
+
+  /* ── STEP FLOW ── */
+  .step-flow { display: flex; flex-direction: column; gap: 0; }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--light-gray);
+  }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--red);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+  }
+  .step-content { flex: 1; }
+  .step-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--near-black);
+    margin-bottom: 6px;
+  }
+
+  /* ── TOOL ROW ── */
+  .tool-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .tool-row > div {
+    padding: 10px 14px;
+    border-right: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .tool-row > div:last-child { border-right: none; }
+  .tool-row .tool-fn {
+    font-weight: 600;
+    color: var(--near-black);
+  }
+  .tool-row .tool-rec {
+    color: var(--mid-gray);
+    font-size: 11px;
+  }
+  .tool-row .tool-choice input { border: none; background: transparent; font-size: 12px; }
+
+  /* ── INFO CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--red);
+    background: var(--light-gray);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--mid-gray);
+  }
+  .callout strong { color: var(--near-black); }
+
+  /* ── MODULE COMPLETE BANNER ── */
+  .module-complete {
+    margin-top: 48px;
+    background: var(--near-black);
+    border-radius: 4px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .module-complete p {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .module-complete p strong { color: var(--white); }
+  .next-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .next-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT BUTTON ── */
+  .print-bar {
+    position: fixed;
+    bottom: 24px;
+    right: 28px;
+    z-index: 200;
+  }
+  .print-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--near-black);
+    color: var(--white);
+    border: none;
+    padding: 14px 24px;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .print-btn:hover { background: var(--red); }
+
+  /* ── REFERENCE PAGE ── */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .ref-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .ref-card-header {
+    background: var(--near-black);
+    padding: 12px 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  .ref-card-body { padding: 14px 18px; }
+  .ref-row {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: 12px;
+  }
+  .ref-row:last-child { border: none; }
+  .ref-row .lbl {
+    font-weight: 600;
+    color: var(--red);
+    flex-shrink: 0;
+    width: 90px;
+  }
+  .ref-row .val { color: var(--mid-gray); }
+  .mindset-list { list-style: none; }
+  .mindset-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: 12px;
+    color: var(--mid-gray);
+    padding-left: 12px;
+    position: relative;
+  }
+  .mindset-list li::before {
+    content: '—';
+    color: var(--red);
+    position: absolute;
+    left: 0;
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    .nav-bar, .print-bar, .next-btn, .module-complete { display: none !important; }
+    .module-section { display: block !important; page-break-before: always; }
+    .module-section:first-of-type { page-break-before: avoid; }
+    .cover { page-break-after: always; min-height: auto; padding: 60px; }
+    body { font-size: 11px; }
+    .module-num { font-size: 60px; }
+    .module-title { font-size: 28px; }
+    .wrapper { padding: 0 30px 40px; max-width: 100%; }
+    input[type="text"], textarea, select {
+      border: 1px solid #ccc !important;
+      background: #fff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .checklist li, .row-table, .section-block { page-break-inside: avoid; }
+    iframe { display: none !important; }
+    .formula-card, .callout, .ref-card-header, .module-header {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .cover { padding: 50px 30px; }
+    .cover h1 { font-size: 72px; }
+    .wrapper { padding: 0 20px 60px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .ref-grid { grid-template-columns: 1fr; }
+    .module-complete { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div class="cover-eyebrow">PivotYes · Business Course</div>
+  <h1>LAUNCH<br><span>MODE</span></h1>
+  <div class="cover-sub">Your module-by-module action guide. Complete each exercise as you work through the course.</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">Presented by <strong>Blimi Adler</strong> · PivotYes Consulting</div>
+  <div class="cover-logo">PIVOT<span>YES</span></div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="showModule('m0')">Mod 0</button>
+  <button class="nav-btn" onclick="showModule('m1')">1 · Foundation</button>
+  <button class="nav-btn" onclick="showModule('m2')">2 · Vision</button>
+  <button class="nav-btn" onclick="showModule('m3')">3 · Marketing</button>
+  <button class="nav-btn" onclick="showModule('m4')">4 · Sales</button>
+  <button class="nav-btn" onclick="showModule('m5')">5 · Operations</button>
+  <button class="nav-btn" onclick="showModule('m6')">6 · Money</button>
+  <button class="nav-btn" onclick="showModule('m7')">7 · Structure</button>
+  <button class="nav-btn" onclick="showModule('m8')">8 · Legal</button>
+  <button class="nav-btn" onclick="showModule('m9')">9 · Time</button>
+  <button class="nav-btn" onclick="showModule('m10')">10 · 90 Days</button>
+  <button class="nav-btn" onclick="showModule('ref')">Reference</button>
+</div>
+
+<div class="wrapper">
+
+  <!-- MODULE 0 -->
+  <div class="module-section active" id="m0">
+    <div class="module-header">
+      <div class="module-num">00</div>
+      <div class="module-title-block">
+        <div class="module-tag">Foundation</div>
+        <div class="module-title">Why Businesses Fail</div>
+        <div class="module-desc">Before you build, understand what breaks most businesses — so you can avoid it.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module Video</div>
+      <a href="https://drive.google.com/file/d/1OmBtnOE4yygpqDkTWpKF5qjQD4ur7J4h/view" target="_blank" style="display:block;text-decoration:none;">
+        <div style="background:var(--near-black);border-radius:4px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <div style="width:64px;height:64px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid white;margin-left:5px;"></div>
+          </div>
+          <div style="color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Watch Module 0 · Click to Open</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:11px;">Opens in Google Drive</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">The 5 Reasons</div>
+      <table class="row-table">
+        <thead>
+          <tr>
+            <th>Reason</th>
+            <th>What It Means</th>
+            <th>How This Course Addresses It</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">No market need</td><td style="padding:10px 14px;color:var(--mid-gray)">Nobody wanted what they were selling</td><td style="padding:10px 14px;color:var(--mid-gray)">Module 1: Prove your concept first</td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Ran out of cash</td><td style="padding:10px 14px;color:var(--mid-gray)">No money tracking or runway planning</td><td style="padding:10px 14px;color:var(--mid-gray)">Module 6: Money basics & runway</td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">No clear offer</td><td style="padding:10px 14px;color:var(--mid-gray)">Unclear what they sold or who it was for</td><td style="padding:10px 14px;color:var(--mid-gray)">Module 1: Define your offer</td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">No marketing</td><td style="padding:10px 14px;color:var(--mid-gray)">People didn't know they existed</td><td style="padding:10px 14px;color:var(--mid-gray)">Module 3: Marketing strategy</td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">No structure</td><td style="padding:10px 14px;color:var(--mid-gray)">Owner wore every hat, nothing documented</td><td style="padding:10px 14px;color:var(--mid-gray)">Module 7: Roles & SOPs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Reflection</div>
+      <div class="field-group">
+        <div class="field-label">Which of the 5 feels most relevant to where you are right now? Why?</div>
+        <textarea class="tall" placeholder="Write your honest answer here..."></textarea>
+      </div>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>00</strong> · Foundation</p>
+      <button class="next-btn" onclick="showModule('m1')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 1 -->
+  <div class="module-section" id="m1">
+    <div class="module-header">
+      <div class="module-num">01</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 1</div>
+        <div class="module-title">Business Foundation</div>
+        <div class="module-desc">Clarity before everything. Define what you sell, who you serve, and why they should choose you.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module Video</div>
+      <a href="https://drive.google.com/file/d/108PEHh2UWka5jMUOf0Ceq8cgz62DvSjb/view" target="_blank" style="display:block;text-decoration:none;">
+        <div style="background:var(--near-black);border-radius:4px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <div style="width:64px;height:64px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid white;margin-left:5px;"></div>
+          </div>
+          <div style="color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Watch Module 1 · Click to Open</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:11px;">Opens in Google Drive</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. Your Offer — One Sentence Formula</div>
+      <div class="formula-card">
+        I help <strong>[who]</strong> with <strong>[problem]</strong> by <strong>[how]</strong>
+        <br><em>Example: I help small contractors with understanding their numbers by building simple financial dashboards.</em>
+      </div>
+      <div class="grid-3">
+        <div class="field-group">
+          <div class="field-label">Who (your client)</div>
+          <input type="text" placeholder="e.g. small contractors">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Problem</div>
+          <input type="text" placeholder="e.g. understanding their numbers">
+        </div>
+        <div class="field-group">
+          <div class="field-label">How (your method)</div>
+          <input type="text" placeholder="e.g. building simple dashboards">
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Your complete offer sentence</div>
+        <input type="text" placeholder="I help ___ with ___ by ___">
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Your Ideal Client</div>
+      <div class="grid-2">
+        <div class="field-group">
+          <div class="field-label">Who needs this most?</div>
+          <textarea class="short" placeholder="Describe them in detail..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">What problem are they dealing with?</div>
+          <textarea class="short" placeholder="Be specific..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">What are they currently trying / frustrated with?</div>
+          <textarea class="short" placeholder="Current solutions they've tried..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Where do they spend time (online or offline)?</div>
+          <textarea class="short" placeholder="Channels, communities, events..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. Prove Your Concept</div>
+      <div class="callout">Reach out to 3 people who fit your ideal client profile and ask: <strong>"Is this something you struggle with?"</strong> and <strong>"Would you pay someone to solve this?"</strong></div>
+      <table class="row-table">
+        <thead><tr><th style="width:40%">Person / Contact</th><th>Their Response</th><th style="width:120px">Willing to Pay?</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><input type="text" placeholder="Name / contact"></td>
+            <td><textarea style="min-height:38px;resize:none" placeholder="What they said..."></textarea></td>
+            <td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td>
+          </tr>
+          <tr>
+            <td><input type="text" placeholder="Name / contact"></td>
+            <td><textarea style="min-height:38px;resize:none" placeholder="What they said..."></textarea></td>
+            <td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td>
+          </tr>
+          <tr>
+            <td><input type="text" placeholder="Name / contact"></td>
+            <td><textarea style="min-height:38px;resize:none" placeholder="What they said..."></textarea></td>
+            <td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="field-group" style="margin-top:14px">
+        <div class="field-label">What did you learn from this?</div>
+        <textarea class="short" placeholder="Key insight..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. Why You?</div>
+      <div class="field-group">
+        <div class="field-label">What do you do better than most people you know?</div>
+        <textarea class="short" placeholder="Your natural strengths..."></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What experience or story brought you to this business?</div>
+        <textarea class="short" placeholder="Your origin story..."></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What would clients say about working with you?</div>
+        <textarea class="short" placeholder="Your differentiators..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">5. How You Deliver It</div>
+      <table class="row-table">
+        <thead><tr><th>Packaging Option</th><th>What It Looks Like</th><th>Will You Use It?</th><th>Your Notes</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Hourly</td><td style="padding:10px 14px;color:var(--mid-gray)">Charge per hour of work</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Notes..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Package / Bundle</td><td style="padding:10px 14px;color:var(--mid-gray)">Set sessions or deliverables for one price</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Notes..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Retainer</td><td style="padding:10px 14px;color:var(--mid-gray)">Monthly fee for ongoing access</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Notes..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Project-based</td><td style="padding:10px 14px;color:var(--mid-gray)">Flat fee for defined scope</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Notes..."></td></tr>
+        </tbody>
+      </table>
+      <div class="field-group" style="margin-top:14px">
+        <div class="field-label">My packaging structure will be</div>
+        <input type="text" placeholder="e.g. 3-month retainer + project-based add-ons">
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 1 Checklist</div>
+      <ul class="checklist" id="cl1">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have a one-sentence offer written clearly</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I can describe my ideal client in detail</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I validated that at least one person would pay for this</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I know why someone would choose me specifically</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have decided how I will package my service or product</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>01</strong> · Foundation</p>
+      <button class="next-btn" onclick="showModule('m2')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module-section" id="m2">
+    <div class="module-header">
+      <div class="module-num">02</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 2</div>
+        <div class="module-title">Vision & Goals</div>
+        <div class="module-desc">Know where you are going before you move in any direction.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module Video</div>
+      <a href="https://drive.google.com/file/d/16xGO22EDIbLm1BS5ilGojIt3zpGC8skh/view" target="_blank" style="display:block;text-decoration:none;">
+        <div style="background:var(--near-black);border-radius:4px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <div style="width:64px;height:64px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid white;margin-left:5px;"></div>
+          </div>
+          <div style="color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Watch Module 2 · Click to Open</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:11px;">Opens in Google Drive</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. Your 3-Year Vision</div>
+      <div class="callout">Write in <strong>present tense</strong> as if it is already happening. Where are you? How many clients? What does your life feel like?</div>
+      <textarea class="tall" placeholder="It's [year]. My business is... I'm working with... My team is... My life feels..."></textarea>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Your 1-Year SMART Goal</div>
+      <table class="row-table">
+        <thead><tr><th style="width:120px">SMART</th><th style="width:200px">What It Means</th><th>Your Answer</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Specific</td><td style="padding:10px 14px;color:var(--mid-gray)">Exactly what you want to achieve</td><td><input type="text" placeholder="e.g. Sign 8 paying clients in my core offer"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Measurable</td><td style="padding:10px 14px;color:var(--mid-gray)">A number or clear outcome</td><td><input type="text" placeholder="e.g. 8 clients = $3,200/month"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Achievable</td><td style="padding:10px 14px;color:var(--mid-gray)">Realistic for your current stage</td><td><input type="text" placeholder="e.g. Yes — I have 2 warm leads already"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Relevant</td><td style="padding:10px 14px;color:var(--mid-gray)">Aligned with your 3-year vision</td><td><input type="text" placeholder="e.g. Feeds directly into my Year 1 revenue target"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Time-bound</td><td style="padding:10px 14px;color:var(--mid-gray)">Deadline: 12 months from today</td><td><input type="text" placeholder="By [date]"></td></tr>
+        </tbody>
+      </table>
+      <div class="field-group" style="margin-top:14px">
+        <div class="field-label">My 1-year goal in one sentence</div>
+        <input type="text" placeholder="By [date], I will have achieved ___ measured by ___">
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. First 3 Actions I Can Start This Week</div>
+      <div class="step-flow">
+        <div class="step-item"><div class="step-num">1</div><div class="step-content"><input type="text" placeholder="First action..."></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-content"><input type="text" placeholder="Second action..."></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-content"><input type="text" placeholder="Third action..."></div></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 2 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written my 3-year vision in present tense</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have defined one SMART goal for the next 12 months</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have listed 3 actions I can take this week</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>My vision is somewhere I can see it every day</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>02</strong> · Vision & Goals</p>
+      <button class="next-btn" onclick="showModule('m3')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module-section" id="m3">
+    <div class="module-header">
+      <div class="module-num">03</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 3</div>
+        <div class="module-title">Marketing</div>
+        <div class="module-desc">Let the right people know you exist — consistently and simply.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module Video</div>
+      <a href="https://drive.google.com/file/d/1ttr6VMTgIIjht02yJSsy53jWc4xoa5Bt/view" target="_blank" style="display:block;text-decoration:none;">
+        <div style="background:var(--near-black);border-radius:4px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <div style="width:64px;height:64px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid white;margin-left:5px;"></div>
+          </div>
+          <div style="color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Watch Module 3 · Click to Open</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:11px;">Opens in Google Drive</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. My Target Customer</div>
+      <div class="grid-3">
+        <div class="field-group">
+          <div class="field-label">Who am I trying to reach?</div>
+          <textarea class="short" placeholder="Be specific..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Problem they're trying to solve?</div>
+          <textarea class="short" placeholder="Their pain point..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Where do they spend time?</div>
+          <textarea class="short" placeholder="Channels, platforms..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Core Offer Statement (from Module 1)</div>
+      <input type="text" placeholder="I help ___ with ___ by ___">
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. Where I Will Show Up — Choose 1 or 2 Channels</div>
+      <table class="row-table">
+        <thead><tr><th>Channel</th><th>Best For</th><th style="width:80px">Use It?</th><th>My Commitment</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Word of Mouth</td><td style="padding:10px 14px;color:var(--mid-gray)">Every business</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Tell ___ people this week"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Referrals</td><td style="padding:10px 14px;color:var(--mid-gray)">Service businesses</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="Ask ___ contacts"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">WhatsApp</td><td style="padding:10px 14px;color:var(--mid-gray)">Local / community</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="___ posts / week"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Networking</td><td style="padding:10px 14px;color:var(--mid-gray)">B2B / local services</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="___ events / month"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Instagram</td><td style="padding:10px 14px;color:var(--mid-gray)">Visual / lifestyle brands</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="___ posts / week"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">LinkedIn</td><td style="padding:10px 14px;color:var(--mid-gray)">B2B / professional services</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="___ posts / week"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Cold Outreach</td><td style="padding:10px 14px;color:var(--mid-gray)">Any</td><td><select><option>Yes</option><option>No</option><option>Maybe</option></select></td><td><input type="text" placeholder="___ messages / week"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. Content Plan — What I Will Post</div>
+      <div class="step-flow">
+        <div class="step-item">
+          <div class="step-content">
+            <div class="step-label">Educational Tip</div>
+            <input type="text" placeholder="A short tip related to your service...">
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-content">
+            <div class="step-label">Behind the Scenes</div>
+            <input type="text" placeholder="Something you're working on right now...">
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-content">
+            <div class="step-label">Story / Result</div>
+            <input type="text" placeholder="A problem you helped someone solve...">
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-content">
+            <div class="step-label">Your Offer</div>
+            <input type="text" placeholder="A clear description of what you do and how to work with you...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">5. Simple Marketing Budget</div>
+      <div class="callout">Rule of thumb: <strong>5–10% of revenue</strong> on marketing. If pre-revenue, start with time before money.</div>
+      <div class="grid-2">
+        <div class="field-group">
+          <div class="field-label">My current monthly revenue (or target)</div>
+          <input type="text" placeholder="$">
+        </div>
+        <div class="field-group">
+          <div class="field-label">My monthly marketing budget</div>
+          <input type="text" placeholder="$">
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">The channels I will invest in</div>
+        <input type="text" placeholder="e.g. LinkedIn + word of mouth">
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 3 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have defined my target customer clearly</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have chosen 1–2 marketing channels to focus on</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have planned one piece of content for each content type</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have set a simple marketing budget</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have committed to a posting or outreach schedule</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>03</strong> · Marketing</p>
+      <button class="next-btn" onclick="showModule('m4')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module-section" id="m4">
+    <div class="module-header">
+      <div class="module-num">04</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 4</div>
+        <div class="module-title">Sales</div>
+        <div class="module-desc">Sales is helping someone make the right decision. Follow the flow every time.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. The Sales Conversation Flow</div>
+      <div class="step-flow">
+        <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-label">Build Comfort</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"Tell me a little about what's going on."</div><input type="text" placeholder="Your opening line..."></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-label">Ask Questions</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"What are you struggling with right now?"</div><input type="text" placeholder="Your discovery questions..."></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-label">Reflect Back</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"From what I'm hearing, you need help with X because Y."</div><input type="text" placeholder="Your reflection script..."></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-label">Explain Solution</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"Here's what working together would look like..."</div><input type="text" placeholder="Your offer pitch..."></div></div>
+        <div class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-label">Ask for Questions</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"Do you have any questions?"</div><input type="text" placeholder="Your transition..."></div></div>
+        <div class="step-item"><div class="step-num">6</div><div class="step-content"><div class="step-label">Close the Loop</div><div style="font-size:12px;color:var(--mid-gray);margin-bottom:6px">"Would you like to move forward?"</div><input type="text" placeholder="Your close..."></div></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Handling Objections</div>
+      <div class="objection-card">
+        <div class="objection-header"><span class="tag">Price</span>"It's more than I expected."</div>
+        <div class="objection-body"><div class="field-label" style="margin-bottom:6px">Your response</div><textarea class="short" placeholder="What you'll say when they push back on price..."></textarea></div>
+      </div>
+      <div class="objection-card">
+        <div class="objection-header"><span class="tag">Time</span>"I need to think about it."</div>
+        <div class="objection-body"><div class="field-label" style="margin-bottom:6px">Your response</div><textarea class="short" placeholder="What you'll say when they stall..."></textarea></div>
+      </div>
+      <div class="objection-card">
+        <div class="objection-header"><span class="tag">Doubt</span>"I'm not sure this is right for me."</div>
+        <div class="objection-body"><div class="field-label" style="margin-bottom:6px">Your response</div><textarea class="short" placeholder="What you'll say when they're unsure..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. Follow-Up Sequence</div>
+      <table class="row-table">
+        <thead><tr><th>When</th><th>What to Do</th><th>Your Message</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Day 1</td><td style="padding:10px 14px;color:var(--mid-gray)">Send a recap</td><td><input type="text" placeholder="Your Day 1 message..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Day 3</td><td style="padding:10px 14px;color:var(--mid-gray)">Check in</td><td><input type="text" placeholder="Your Day 3 message..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Day 7</td><td style="padding:10px 14px;color:var(--mid-gray)">Add value</td><td><input type="text" placeholder="Useful tip, article, or idea..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Day 14</td><td style="padding:10px 14px;color:var(--mid-gray)">Final touch</td><td><input type="text" placeholder="Your Day 14 message..."></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. My Outreach Script</div>
+      <div class="formula-card">
+        "Hey, I recently started <strong>[what you do]</strong>. I'm helping <strong>[who]</strong> with <strong>[problem]</strong>. I'm taking on a few people to get started — if this is relevant to you or someone you know, I'd love to speak."
+      </div>
+      <div class="field-group">
+        <div class="field-label">My personalized outreach script</div>
+        <textarea placeholder="Write your script here..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">5. Practice Questions — 4 Questions to Ask Every Client</div>
+      <div class="step-flow">
+        <div class="step-item"><div class="step-num">1</div><div class="step-content"><input type="text" placeholder="Question 1..."></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-content"><input type="text" placeholder="Question 2..."></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-content"><input type="text" placeholder="Question 3..."></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-content"><input type="text" placeholder="Question 4..."></div></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 4 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I know the 6-step sales flow by heart</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written a response for each of the 3 main objections</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have my follow-up sequence ready</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written my personalized outreach script</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have practiced saying my price out loud without justifying it</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>04</strong> · Sales</p>
+      <button class="next-btn" onclick="showModule('m5')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 5 -->
+  <div class="module-section" id="m5">
+    <div class="module-header">
+      <div class="module-num">05</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 5</div>
+        <div class="module-title">Operations & Delivery</div>
+        <div class="module-desc">Delivery is your reputation. Every step either builds trust or breaks it.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. My Deliverable</div>
+      <div class="formula-card">My client receives <strong>[what]</strong> by <strong>[when/how]</strong>.</div>
+      <div class="grid-2">
+        <div class="field-group">
+          <div class="field-label">My client receives</div>
+          <input type="text" placeholder="What exactly do they get?">
+        </div>
+        <div class="field-group">
+          <div class="field-label">By (timeline or method)</div>
+          <input type="text" placeholder="e.g. within 5 business days via email">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. My Delivery Process — Step by Step</div>
+      <table class="row-table">
+        <thead><tr><th style="width:50px">#</th><th>What Happens</th><th style="width:140px">Who Does It</th><th style="width:120px">Timeline</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">1</td><td><input type="text" placeholder="Client signs and pays" value="Client signs and pays"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day 0"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">2</td><td><input type="text" placeholder="Send welcome message / onboarding info"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day 0–1"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">3</td><td><input type="text" placeholder="Gather what you need from the client"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">4</td><td><input type="text" placeholder="Do the work"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">5</td><td><input type="text" placeholder="Deliver the result"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">6</td><td><input type="text" placeholder="Confirm satisfaction / close out"></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">7</td><td><input type="text" placeholder="Add step if needed..."></td><td><input type="text" placeholder="Who"></td><td><input type="text" placeholder="Day..."></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. My Standards</div>
+      <div class="grid-2">
+        <div class="field-group">
+          <div class="field-label">What does great delivery look like for your clients?</div>
+          <textarea class="short" placeholder="Your quality standard..."></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">What would make you redo something?</div>
+          <textarea class="short" placeholder="Your non-negotiables..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. Write Your First SOP</div>
+      <div class="callout">Rule: <strong>if you do it more than once, write it down.</strong> Keep it to 3–5 steps.</div>
+      <div class="field-group">
+        <div class="field-label">SOP Name / Task</div>
+        <input type="text" placeholder="e.g. How I Respond to a New Inquiry">
+      </div>
+      <div class="step-flow">
+        <div class="step-item"><div class="step-num">1</div><div class="step-content"><input type="text" placeholder="Step 1..."></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-content"><input type="text" placeholder="Step 2..."></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-content"><input type="text" placeholder="Step 3..."></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-content"><input type="text" placeholder="Step 4..."></div></div>
+        <div class="step-item"><div class="step-num">5</div><div class="step-content"><input type="text" placeholder="Step 5..."></div></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 5 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I can describe my deliverable in one clear sentence</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have mapped every step of my delivery process</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written my quality standards</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written at least one SOP</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have assigned a timeline to each step</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>05</strong> · Operations</p>
+      <button class="next-btn" onclick="showModule('m6')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 6 -->
+  <div class="module-section" id="m6">
+    <div class="module-header">
+      <div class="module-num">06</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 6</div>
+        <div class="module-title">Money Basics</div>
+        <div class="module-desc">Confidence with money begins the moment you stop avoiding it.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. Startup Cost Calculator</div>
+      <table class="row-table">
+        <thead><tr><th>One-Time Startup Cost</th><th style="width:160px">Estimated Amount</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px">Equipment / tools</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Website or software setup</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Licenses and permits</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Branding / design</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Legal / accounting setup</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Other</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:700;color:var(--near-black)">TOTAL STARTUP COSTS</td><td><input type="text" placeholder="$"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Monthly Operating Costs</div>
+      <table class="row-table">
+        <thead><tr><th>Monthly Cost</th><th style="width:160px">Estimated Amount</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px">Rent / workspace</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Phone and internet</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Software subscriptions</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Marketing / advertising</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Insurance</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">My salary or draw</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px">Other</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:700">TOTAL MONTHLY COSTS</td><td><input type="text" placeholder="$"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. Runway Calculator</div>
+      <div class="callout">Minimum <strong>3 months</strong> of runway recommended. Ideally <strong>6</strong>.</div>
+      <div class="grid-3">
+        <div class="field-group">
+          <div class="field-label">Monthly costs ($)</div>
+          <input type="text" placeholder="$">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Months of runway needed</div>
+          <input type="text" placeholder="e.g. 6">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Total runway needed ($)</div>
+          <input type="text" placeholder="$">
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Total needed to start (Startup + Runway)</div>
+        <input type="text" placeholder="$">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Where will this money come from?</div>
+        <textarea class="short" placeholder="Savings, loan, investor, side income..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. Revenue Projection</div>
+      <table class="row-table">
+        <thead><tr><th>Item</th><th style="width:160px">Example</th><th style="width:160px">Your Numbers</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Price per client / sale</td><td style="padding:10px 14px;color:var(--mid-gray)">$500</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Clients / sales per month</td><td style="padding:10px 14px;color:var(--mid-gray)">4 clients</td><td><input type="text" placeholder="#"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Monthly revenue</td><td style="padding:10px 14px;color:var(--mid-gray)">$2,000</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Monthly costs</td><td style="padding:10px 14px;color:var(--mid-gray)">$800</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Monthly profit</td><td style="padding:10px 14px;color:var(--mid-gray)">$1,200</td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Months to break even</td><td style="padding:10px 14px;color:var(--mid-gray)">2.5 months</td><td><input type="text" placeholder="___ months"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">5. My Pricing</div>
+      <div style="font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:10px">For a Service — Hourly Value Method</div>
+      <div class="grid-2">
+        <div class="field-group"><div class="field-label">Total time per client (hours)</div><input type="text" placeholder="___ hours"></div>
+        <div class="field-group"><div class="field-label">What I want to earn per hour</div><input type="text" placeholder="$"></div>
+        <div class="field-group"><div class="field-label">My base price</div><input type="text" placeholder="$"></div>
+        <div class="field-group"><div class="field-label">Market range in my industry</div><input type="text" placeholder="$ to $"></div>
+      </div>
+      <div class="field-group"><div class="field-label">My final price</div><input type="text" placeholder="$" style="font-size:16px;font-weight:700;color:var(--red)"></div>
+
+      <div style="font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mid-gray);margin:20px 0 10px">For a Product — Cost Formula</div>
+      <div class="grid-2">
+        <div class="field-group"><div class="field-label">Cost to make / buy</div><input type="text" placeholder="$"></div>
+        <div class="field-group"><div class="field-label">Labor (your time)</div><input type="text" placeholder="$"></div>
+        <div class="field-group"><div class="field-label">Overhead share</div><input type="text" placeholder="$"></div>
+        <div class="field-group"><div class="field-label">Profit margin %</div><input type="text" placeholder="e.g. 40%"></div>
+      </div>
+      <div class="field-group"><div class="field-label">My final product price</div><input type="text" placeholder="$" style="font-size:16px;font-weight:700;color:var(--red)"></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 6 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have listed all my startup costs</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I know my monthly operating costs</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have calculated how much runway I need</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have a clear revenue projection for months 1, 2, and 3</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have set my price using the correct formula</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have opened (or plan to open) a business bank account</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have chosen a tool to track my money</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>06</strong> · Money Basics</p>
+      <button class="next-btn" onclick="showModule('m7')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 7 -->
+  <div class="module-section" id="m7">
+    <div class="module-header">
+      <div class="module-num">07</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 7</div>
+        <div class="module-title">Structure & Roles</div>
+        <div class="module-desc">Do the right things — and know what can wait.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. Tasks by Business Function</div>
+      <div class="callout"><strong>Circle what only you can do. Highlight what could be delegated.</strong> Write everything that's currently on your plate.</div>
+      <table class="row-table">
+        <thead><tr><th style="width:140px">Function</th><th>Tasks I Currently Handle</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Marketing</td><td><textarea style="min-height:50px;resize:none" placeholder="List all marketing tasks..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Sales</td><td><textarea style="min-height:50px;resize:none" placeholder="List all sales tasks..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Operations</td><td><textarea style="min-height:50px;resize:none" placeholder="List all ops tasks..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Financials</td><td><textarea style="min-height:50px;resize:none" placeholder="List all finance tasks..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">HR</td><td><textarea style="min-height:50px;resize:none" placeholder="List all people tasks..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Leadership</td><td><textarea style="min-height:50px;resize:none" placeholder="List all leadership tasks..."></textarea></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. What Can Wait — Don't Build This Yet</div>
+      <div class="field-group">
+        <div class="field-label">What have you been working on that should actually wait? Be honest.</div>
+        <textarea placeholder="e.g. perfect website redesign, complex funnels, fancy automations..."></textarea>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. What to Delegate First</div>
+      <table class="row-table">
+        <thead><tr><th>Category</th><th>Examples</th><th style="width:140px">Could I Delegate Now?</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Admin</td><td style="padding:10px 14px;color:var(--mid-gray)">Scheduling, follow-up, templates</td><td><select><option>Yes</option><option>No</option><option>Not yet</option></select></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Delivery</td><td style="padding:10px 14px;color:var(--mid-gray)">Parts of your service when too full</td><td><select><option>Yes</option><option>No</option><option>Not yet</option></select></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Finance</td><td style="padding:10px 14px;color:var(--mid-gray)">Bookkeeping, expense tracking</td><td><select><option>Yes</option><option>No</option><option>Not yet</option></select></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Marketing</td><td style="padding:10px 14px;color:var(--mid-gray)">Repurposing content, designs, posting</td><td><select><option>Yes</option><option>No</option><option>Not yet</option></select></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. My Essential Tools — Keep It Simple</div>
+      <div class="tool-row"><div class="tool-fn">Communication</div><div class="tool-rec">Recommended: Gmail</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Task Tracking</div><div class="tool-rec">Recommended: Asana / Trello</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Notes / SOPs</div><div class="tool-rec">Recommended: Notion / Google Docs</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">File Storage</div><div class="tool-rec">Recommended: Google Drive</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Lead Tracking</div><div class="tool-rec">Recommended: Google Sheets / HubSpot</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Scheduling</div><div class="tool-rec">Recommended: Calendly</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Invoicing / Finance</div><div class="tool-rec">Recommended: Wave / QuickBooks</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+      <div class="tool-row"><div class="tool-fn">Payments</div><div class="tool-rec">Recommended: Stripe / PayPal</div><div class="tool-choice"><input type="text" placeholder="My choice..."></div></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 7 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have listed all tasks under each business function</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I know which tasks I should NOT be spending time on right now</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have identified what I will delegate first</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have chosen my core tools (one per function)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have created at least 3 simple templates I will actually use</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>07</strong> · Structure & Roles</p>
+      <button class="next-btn" onclick="showModule('m8')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 8 -->
+  <div class="module-section" id="m8">
+    <div class="module-header">
+      <div class="module-num">08</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 8</div>
+        <div class="module-title">Legal Setup</div>
+        <div class="module-desc">Professional is a decision, not a status someone gives you.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. Business Structure — Choose One</div>
+      <table class="row-table">
+        <thead><tr><th>Structure</th><th>Best For</th><th>Key Notes</th><th style="width:100px">My Choice</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Sole Proprietor</td><td style="padding:10px 14px;color:var(--mid-gray)">Solo, low risk, just starting</td><td style="padding:10px 14px;color:var(--mid-gray)">Easiest to set up. No liability separation.</td><td style="text-align:center"><input type="radio" name="bizstructure" value="sole"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">LLC</td><td style="padding:10px 14px;color:var(--mid-gray)">Most small businesses</td><td style="padding:10px 14px;color:var(--mid-gray)">Protects personal assets. Recommended for most.</td><td style="text-align:center"><input type="radio" name="bizstructure" value="llc"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">S Corporation</td><td style="padding:10px 14px;color:var(--mid-gray)">Once profitable, tax strategy</td><td style="padding:10px 14px;color:var(--mid-gray)">Reduces self-employment tax. Talk to accountant.</td><td style="text-align:center"><input type="radio" name="bizstructure" value="scorp"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Partnership LLC</td><td style="padding:10px 14px;color:var(--mid-gray)">Two or more owners</td><td style="padding:10px 14px;color:var(--mid-gray)">Put everything in writing first.</td><td style="text-align:center"><input type="radio" name="bizstructure" value="part"></td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="margin-top:12px">Always confirm your structure choice with an accountant before registering.</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Setup Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Chosen my business structure</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Chosen my business name</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Registered my business (if required)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Applied for my EIN (free at IRS.gov)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Opened a business bank account</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Created my basic contract template</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Consulted with an accountant</li>
+      </ul>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. My Contract Must Include</div>
+      <div class="callout">What is included · What is NOT included · Payment terms · Cancellation policy · Timeline · How disputes are handled</div>
+      <div class="field-group">
+        <div class="field-label">Notes — what I need to add to my current contract</div>
+        <textarea placeholder="List gaps in your current contract or what you need to build from scratch..."></textarea>
+      </div>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>08</strong> · Legal Setup</p>
+      <button class="next-btn" onclick="showModule('m9')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 9 -->
+  <div class="module-section" id="m9">
+    <div class="module-header">
+      <div class="module-num">09</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 9</div>
+        <div class="module-title">Time & Boundaries</div>
+        <div class="module-desc">Your business grows when you protect the time to build it.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. My Weekly Time Blocks</div>
+      <table class="row-table">
+        <thead><tr><th>Block</th><th>Purpose</th><th>My Day & Time</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">CEO Hour</td><td style="padding:10px 14px;color:var(--mid-gray)">Review goals, plan the week, look at what's working</td><td><input type="text" placeholder="Day & time..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Marketing Block</td><td style="padding:10px 14px;color:var(--mid-gray)">Create content, schedule posts, manage visibility</td><td><input type="text" placeholder="Day & time..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Sales Block</td><td style="padding:10px 14px;color:var(--mid-gray)">Outreach, follow-up, connect with leads</td><td><input type="text" placeholder="Day & time..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Delivery Block</td><td style="padding:10px 14px;color:var(--mid-gray)">Client work — the actual service</td><td><input type="text" placeholder="Day & time..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Admin Block</td><td style="padding:10px 14px;color:var(--mid-gray)">Invoicing, emails, scheduling, tools</td><td><input type="text" placeholder="Day & time..."></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Money Check</td><td style="padding:10px 14px;color:var(--mid-gray)">Review income, expenses, cash position (15 min)</td><td><input type="text" placeholder="Day & time..."></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. My Boundaries</div>
+      <div class="callout">Without boundaries your business will take over your entire day. Define yours now.</div>
+      <div class="grid-2">
+        <div class="field-group"><div class="field-label">I am available to clients (hours)</div><input type="text" placeholder="e.g. 9am – 5pm"></div>
+        <div class="field-group"><div class="field-label">I do not respond to messages after</div><input type="text" placeholder="e.g. 7pm"></div>
+        <div class="field-group"><div class="field-label">My one unplugged block each week</div><input type="text" placeholder="e.g. Sunday all day"></div>
+        <div class="field-group"><div class="field-label">My maximum working hours per day</div><input type="text" placeholder="e.g. 8 hours"></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 9 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have set my weekly CEO hour</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have assigned a time block for each business function</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written my availability boundaries</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have one daily goal assigned to each working day</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>My schedule is written somewhere I can see it</li>
+      </ul>
+    </div>
+
+    <div class="module-complete">
+      <p>Module <strong>09</strong> · Time & Boundaries</p>
+      <button class="next-btn" onclick="showModule('m10')">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- MODULE 10 -->
+  <div class="module-section" id="m10">
+    <div class="module-header">
+      <div class="module-num">10</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 10</div>
+        <div class="module-title">Your First 90 Days</div>
+        <div class="module-desc">Your goal is not a perfect business. Your goal is your first sale.</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">1. My 90-Day Goals</div>
+      <table class="row-table">
+        <thead><tr><th style="width:50px">#</th><th>Goal</th><th style="width:200px">How I Will Measure It</th><th style="width:110px">Done By</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">1</td><td><input type="text" placeholder="e.g. Get first 3–5 clients"></td><td><input type="text" placeholder="e.g. Signed contracts"></td><td><input type="text" placeholder="Date"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">2</td><td><input type="text" placeholder="e.g. Finalize pricing"></td><td><input type="text" placeholder="How you'll measure..."></td><td><input type="text" placeholder="Date"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">3</td><td><input type="text" placeholder="e.g. 10–15 sales conversations"></td><td><input type="text" placeholder="How you'll measure..."></td><td><input type="text" placeholder="Date"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">4</td><td><input type="text" placeholder="e.g. Build onboarding system"></td><td><input type="text" placeholder="How you'll measure..."></td><td><input type="text" placeholder="Date"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">5</td><td><input type="text" placeholder="Goal 5..."></td><td><input type="text" placeholder="How you'll measure..."></td><td><input type="text" placeholder="Date"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">2. Monthly Milestones</div>
+      <table class="row-table">
+        <thead><tr><th style="width:130px">Month</th><th style="width:180px">Focus</th><th>My Key Actions</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Month 1 — Setup</td><td style="padding:10px 14px;color:var(--mid-gray);font-size:11px">Finalize offer, price, core message. Pick your platform.</td><td><textarea style="min-height:54px;resize:none" placeholder="Your Month 1 actions..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Month 2 — Action</td><td style="padding:10px 14px;color:var(--mid-gray);font-size:11px">Talk to potential clients. Do 4–6 sales conversations.</td><td><textarea style="min-height:54px;resize:none" placeholder="Your Month 2 actions..."></textarea></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600;color:var(--red)">Month 3 — Momentum</td><td style="padding:10px 14px;color:var(--mid-gray);font-size:11px">Increase visibility. Refine delivery. Get referrals.</td><td><textarea style="min-height:54px;resize:none" placeholder="Your Month 3 actions..."></textarea></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">3. My Weekly Scorecard</div>
+      <table class="row-table">
+        <thead><tr><th>What I Track</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 14px;font-weight:600">Posts / visibility activities</td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Sales conversations</td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">New leads or inquiries</td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Clients booked</td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td><td><input type="text" placeholder="#"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Income collected</td><td><input type="text" placeholder="$"></td><td><input type="text" placeholder="$"></td><td><input type="text" placeholder="$"></td><td><input type="text" placeholder="$"></td></tr>
+          <tr><td style="padding:10px 14px;font-weight:600">Weekly money check done?</td><td><select><option>Y</option><option>N</option></select></td><td><select><option>Y</option><option>N</option></select></td><td><select><option>Y</option><option>N</option></select></td><td><select><option>Y</option><option>N</option></select></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">4. Monthly Review — Ask Yourself Every 30 Days</div>
+      <div class="grid-2">
+        <div class="field-group"><div class="field-label">What went well?</div><textarea class="short" placeholder="..."></textarea></div>
+        <div class="field-group"><div class="field-label">What didn't work?</div><textarea class="short" placeholder="..."></textarea></div>
+        <div class="field-group"><div class="field-label">What needs more consistency?</div><textarea class="short" placeholder="..."></textarea></div>
+        <div class="field-group"><div class="field-label">What created real results?</div><textarea class="short" placeholder="..."></textarea></div>
+        <div class="field-group"><div class="field-label">What do I need to change or stop doing?</div><textarea class="short" placeholder="..."></textarea></div>
+        <div class="field-group"><div class="field-label">What is my focus for next month?</div><textarea class="short" placeholder="..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Final Action Step</div>
+      <div class="callout"><strong>Choose ONE action from this course to start today. Not tomorrow. Today.</strong></div>
+      <div class="field-group">
+        <div class="field-label">The one action I am starting today</div>
+        <input type="text" placeholder="Write it here. Now." style="font-size:15px;font-weight:600;padding:14px 16px">
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">Module 10 Checklist</div>
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have written 3–5 clear goals for my first 90 days</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have broken them into monthly milestones</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have set my weekly rhythm</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have my weekly scorecard ready to track</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>I have chosen ONE action to start today</li>
+      </ul>
+    </div>
+
+    <div class="module-complete" style="background:var(--red)">
+      <p style="color:rgba(255,255,255,0.7)">You've completed <strong style="color:white">Launch Mode</strong></p>
+      <button class="next-btn" style="background:white;color:var(--red)" onclick="showModule('ref')">View Reference →</button>
+    </div>
+  </div>
+
+  <!-- REFERENCE -->
+  <div class="module-section" id="ref">
+    <div class="module-header">
+      <div class="module-num">REF</div>
+      <div class="module-title-block">
+        <div class="module-tag">Quick Reference</div>
+        <div class="module-title">Key Frameworks</div>
+        <div class="module-desc">Everything you need on one page.</div>
+      </div>
+    </div>
+
+    <div class="ref-grid">
+      <div class="ref-card">
+        <div class="ref-card-header">The 6 Business Functions</div>
+        <div class="ref-card-body">
+          <div class="ref-row"><div class="lbl">Marketing</div><div class="val">How you attract customers</div></div>
+          <div class="ref-row"><div class="lbl">Sales</div><div class="val">How you convert interest into revenue</div></div>
+          <div class="ref-row"><div class="lbl">Operations</div><div class="val">How you deliver what you promised</div></div>
+          <div class="ref-row"><div class="lbl">Financials</div><div class="val">How you measure and manage money</div></div>
+          <div class="ref-row"><div class="lbl">HR</div><div class="val">How you hire, manage, and develop people</div></div>
+          <div class="ref-row"><div class="lbl">Leadership</div><div class="val">How you guide and grow the business</div></div>
+        </div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-card-header">The 3 Pillars</div>
+        <div class="ref-card-body">
+          <div class="ref-row"><div class="lbl">Product</div><div class="val">What you sell — offer, packaging, delivery</div></div>
+          <div class="ref-row"><div class="lbl">People</div><div class="val">Who buys and who delivers</div></div>
+          <div class="ref-row"><div class="lbl">Process</div><div class="val">How it happens — systems, SOPs, workflows</div></div>
+        </div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-card-header">Core Formulas</div>
+        <div class="ref-card-body">
+          <div class="ref-row"><div class="lbl">Your Offer</div><div class="val">I help [who] with [problem] by [how]</div></div>
+          <div class="ref-row"><div class="lbl">Service Price</div><div class="val">Time × hourly rate + experience bump = base price</div></div>
+          <div class="ref-row"><div class="lbl">Product Price</div><div class="val">Cost + Labor + Overhead + Margin = Price</div></div>
+          <div class="ref-row"><div class="lbl">Runway</div><div class="val">Monthly costs × months needed = total runway</div></div>
+          <div class="ref-row"><div class="lbl">Revenue</div><div class="val">Price × clients per month = monthly revenue</div></div>
+          <div class="ref-row"><div class="lbl">Profit</div><div class="val">Revenue − Costs = Profit</div></div>
+        </div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-card-header">Mindset Reminders</div>
+        <div class="ref-card-body">
+          <ul class="mindset-list">
+            <li>Done is better than perfect.</li>
+            <li>Focus creates movement. Movement creates confidence.</li>
+            <li>Specificity attracts. Vagueness repels.</li>
+            <li>Delivery is your reputation.</li>
+            <li>The fortune is in the follow-up.</li>
+            <li>Professional is a decision, not a status someone gives you.</li>
+            <li>Consistency builds confidence — one small step at a time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- PRINT BUTTON -->
+<div class="print-bar">
+  <button class="print-btn" onclick="printAll()">⎙ Print / Save PDF</button>
+</div>
+
+<script>
+  function showModule(id) {
+    document.querySelectorAll('.module-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const section = document.getElementById(id);
+    if (section) {
+      section.classList.add('active');
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    const map = { m0:0, m1:1, m2:2, m3:3, m4:4, m5:5, m6:6, m7:7, m8:8, m9:9, m10:10, ref:11 };
+    const idx = map[id];
+    if (idx !== undefined) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+  }
+
+  function printAll() {
+    // Show all sections temporarily
+    const sections = document.querySelectorAll('.module-section');
+    const activeSection = document.querySelector('.module-section.active');
+    sections.forEach(s => s.style.display = 'block');
+    window.print();
+    // Restore after print dialog closes
+    sections.forEach(s => s.style.display = '');
+    if (activeSection) activeSection.style.display = 'block';
+  }
+</script>
+</body>
+</html>
